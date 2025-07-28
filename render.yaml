@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: ocr-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeploy: true
+    region: oregon
