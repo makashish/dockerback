@@ -50,29 +50,34 @@ def api_upload():
     if uploaded_file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    # Save uploaded file
     filename = secure_filename(uploaded_file.filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     uploaded_file.save(filepath)
 
-    # Simulate conversion (replace this with real logic)
-    docx_filename = filename.rsplit('.', 1)[0] + ".docx"
-    docx_path = os.path.join(OUTPUT_FOLDER, docx_filename)
-    with open(docx_path, 'w') as f:
-        f.write("This is a dummy DOCX file.")
+    # 🛠️ You can call your conversion logic here
+    # Let's assume the output docx is saved as 'output.docx'
+    output_filename = "image.docx"  # or use logic to generate filename
+    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
 
-    # Build full URL (dynamic depending on deployment)
-    backend_base_url = request.host_url.rstrip("/")
-    docx_url = f"{backend_base_url}/output/{docx_filename}"
+    # 🔁 If using your process_file() function, do something like:
+    # output_path = process_file(filepath, lang, OUTPUT_FOLDER)
+
+    # ✅ Return the complete URL to frontend
+    backend_url = request.host_url.rstrip('/')  # e.g., https://dockerback-xxxx.onrender.com
+    doc_url = f"{backend_url}/output/{output_filename}"
 
     return jsonify({
-        "message": "Uploaded and converted successfully",
-        "docUrl": docx_url
+        "message": "Uploaded and processed successfully",
+        "docUrl": doc_url
     })
 
+# 🔓 Serve the output files
+@app.route('/output/<path:filename>')
+def download_file(filename):
+
 # ✅ Optional HTML form route for testing via browser
-@app.route('/convert', methods=['GET', 'POST'])
-def form_convert():
+  @app.route('/convert', methods=['GET', 'POST'])
+  def form_convert():
     if request.method == 'POST':
         lang = request.form.get('lang', 'eng')
         uploaded_file = request.files.get('file')
