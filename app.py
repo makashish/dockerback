@@ -7,8 +7,8 @@ from datetime import datetime
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# Enable CORS for API routes
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# Enable CORS only for /api/* endpoints, from localhost:5173
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 # Directories
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
