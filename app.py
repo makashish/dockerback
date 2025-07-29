@@ -64,11 +64,11 @@ def api_upload():
 
     # ✅ Return the complete URL to frontend
     backend_url = request.host_url.rstrip('/')  # e.g., https://dockerback-xxxx.onrender.com
-    doc_url = f"{backend_url}/output/{output_filename}"
+    docUrl = f"{backend_url}/output/{output_filename}"
 
     return jsonify({
         "message": "Uploaded and processed successfully",
-        "docUrl": doc_url
+        "docUrl": {docUrl}
     })
 
 # 🔓 Serve the output files
