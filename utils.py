@@ -5,9 +5,11 @@ import pytesseract
 import os
 import uuid
 from doc_creator import set_font
+import platform
 
 # Set Tesseract path (adjust as needed)
-pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+if platform.system() == "Windows":
+    pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 def process_file(file_path, lang_code, output_folder, language_name='English'):
     output_text = ""
