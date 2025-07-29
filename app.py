@@ -50,11 +50,25 @@ def api_upload():
     if uploaded_file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
+    # Save uploaded file
     filename = secure_filename(uploaded_file.filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     uploaded_file.save(filepath)
 
-    return jsonify({"message": "Uploaded successfully", "filename": filename})
+    # Simulate conversion (replace this with real logic)
+    docx_filename = filename.rsplit('.', 1)[0] + ".docx"
+    docx_path = os.path.join(OUTPUT_FOLDER, docx_filename)
+    with open(docx_path, 'w') as f:
+        f.write("This is a dummy DOCX file.")
+
+    # Build full URL (dynamic depending on deployment)
+    backend_base_url = request.host_url.rstrip("/")
+    docx_url = f"{backend_base_url}/output/{docx_filename}"
+
+    return jsonify({
+        "message": "Uploaded and converted successfully",
+        "docUrl": docx_url
+    })
 
 # ✅ Optional HTML form route for testing via browser
 @app.route('/convert', methods=['GET', 'POST'])
