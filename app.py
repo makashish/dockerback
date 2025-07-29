@@ -7,7 +7,21 @@ import os
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # Setup CORS: allow frontend on Vite dev server
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "capacitor://localhost",               # APK (local)
+            "http://localhost",                    # Browser testing
+            "http://localhost:5173",               # Vite dev server
+            "https://your-backend.onrender.com",   # Deployed backend
+            #"https://yourfrontend.com"             # (Optional) Custom frontend domain
+        ]
+    }
+})
+
+
+
+
 
 # 🔧 Set up folders
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
