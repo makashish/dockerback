@@ -64,20 +64,31 @@ def api_upload():
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     uploaded_file.save(filepath)
 
-    # Dummy conversion simulation
     output_filename = filename.rsplit('.', 1)[0] + '.docx'
     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
 
-    # Simulate saving the DOCX (your real logic will go here)
-    with open(output_path, 'w') as f:
-        f.write("This is a dummy DOCX content.")
+    # ✅ REAL conversion from image → text → docx
+    try:
+        from PIL import Image
+        import pytesseract
+        from docx import Document
 
-    # Construct public URL
+        image = Image.open(filepath)
+        lang = request.form.get("lang", "eng")
+        text = pytesseract.image_to_string(image, lang=lang)
+
+        doc = Document()
+        doc.add_paragraph(text)
+        doc.save(output_path)
+
+    except Exception as e:
+        return jsonify({"error": f"Conversion failed: {str(e)}"}), 500
+
     docx_url = f"https://dockerback-77dc.onrender.com/output/{output_filename}"
 
     return jsonify({
         "message": "Uploaded and converted successfully",
-        "docx_url": docx_url  # ✅ this key must match frontend
+        "docx_url": docx_url
     })
 
 @app.route('/output/<path:filename>')
